@@ -1,0 +1,12 @@
+table(border=2)
+	tr
+		td
+			svg(width=w, height=h)
+				each r in data
+					line(x1=r.x1, y1=h-r.y1, x2 = r.x2, y2=h-r.y2, style=r.style)
+					circle(cx=r.x2, cy=h-r.y2, r="2")
+					circle(cx=r.x1, cy=h-r.y1, r="2")
+					
+    
+p
+	Plot title 

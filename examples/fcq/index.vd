@@ -134,6 +134,435 @@ table
         th Count
         th Enrolled
     tr
-        td!= viz.barchart(_.pluck(top5, 'count'))
-        td!= viz.barchart(_.pluck(top5, 'enrolled'))
+        td!= viz.barchart(_.pluck(top5, 'count'),80)
+        td!= viz.barchart(_.pluck(top5, 'enrolled'),80)
+```
+
+###What is the relationship between total students taught and instructor types?  Barchart 
+
+```
+var instructs = _(data)
+            .groupBy('insttl1')
+            .map(function(members, key){                
+                return {
+                    instruct: key,
+                    instructors: members,
+                }
+            })
+            .each(function(d){
+                d.enrolled = _(d.instructors)
+                              .pluck('N_ENROLL')
+                              .map(Number)
+                              .mean()
+                              .value()                             
+            })
+            .value()        
+
+var top20 = _.sortBy(instructs, 'enrolled')
+            .reverse()
+            .slice(0,20)
+```
+
+The top 20 in terms of the number of students enrolled according to instructor type are:
+
+```jade
+table
+    tr
+        th Instructor Type
+        th Average Enrollment        
+    each d,i in top20
+        tr
+            td= d.instruct
+            td= d.enrolled
+```
+
+```jade
+table
+    tr
+        th Enrolled
+    tr
+        td!= viz.barchart(_.pluck(top20, 'enrolled'),80)
+```
+
+###What is the correlation between average course rating and work load hours?  Barchart
+
+```
+var hours = _(data)
+            .groupBy('Workload_Hrs_Wk')
+            .map(function(members, key){                
+                return {
+                    hour: key,
+                    courses: members,
+                }
+            })
+            .each(function(d){
+                d.rating = _(d.courses)
+                              .pluck('AvgCourse')
+                              .map(Number)
+                              .mean()
+                              .value()                             
+            })
+            .value()        
+
+var top6 = _.sortBy(hours, 'rating')
+            .reverse()
+            .slice(0,6)
+```
+
+The top 6 in terms of the sorted by course rating:
+
+```jade
+table
+    tr
+        th Week Work Load Hours
+        th Average Course Rating       
+    each d,i in top6
+        tr
+            td= d.hour
+            td= d.rating
+```
+
+```jade
+table
+    tr
+        th Enrolled
+    tr
+        td!= viz.barchart(_.pluck(top6, 'rating'),100)
+```
+
+###What is the correlation between grades and instructor types?  Barchart
+
+```
+var instructs = _(data)
+            .groupBy('insttl1')
+            .map(function(members, key){                
+                return {
+                    instruct: key,
+                    courses: members,
+                }
+            })
+            .each(function(d){
+                d.grade = _(d.courses)
+                              .pluck('AVG_GRD')
+                              .map(Number)
+                              .mean()
+                              .value()                             
+            })
+            .value()        
+
+var top40 = _.sortBy(instructs, 'grade')
+            .reverse()
+            .slice(0,40)
+```
+
+The top 40 in terms of the instructor type and average grade:
+
+```jade
+table
+    tr
+        th Instructor Type
+        th Average Grade       
+    each d,i in top40
+        tr
+            td= d.instruct
+            td= d.grade
+```
+
+```jade
+table
+    tr
+        th Grades
+    tr
+        td!= viz.barchart(_.pluck(top40, 'grade'),40)
+```
+
+###What is the correlation between course number (levels) and grades? Linegraph
+
+
+```
+var correlation = _(data)
+            .groupBy('CrsLvlNum')
+            .map(function(members, key){                
+                return {
+                    dept: key,
+                    courses: members,
+                }
+            })
+            .each(function(d){
+                d.grade = _(d.courses)
+                              .pluck('AvgCourse')
+                              .map(Number)
+                              .mean()
+                              .value()                             
+            })
+            .value()        
+
+var top40 = _.sortBy(correlation, 'dept')
+            .reverse()
+            .slice(0,40)
+
+```
+
+```jade
+table
+    tr
+        th Course Level Number
+        th Average Grade       
+    each d,i in top40
+        tr
+            td= d.dept
+            td= d.grade
+```
+```
+
+var arr = [];
+var stud;
+for (i=0;i<top40.length;i++)
+{
+    if(top40[i].dept=='1XXX')
+    {
+        stud = 1
+    }
+    else if(top40[i].dept=='2XXX')
+    {
+        stud = 2
+    }
+     else if(top40[i].dept=='3XXX')
+    {
+        stud = 3
+    }
+     else if(top40[i].dept=='4XXX')
+    {
+        stud = 4
+    }
+     else if(top40[i].dept=='5XXX')
+    {
+        stud = 5
+    }
+     else if(top40[i].dept=='6XXX')
+    {
+        stud = 6
+    }
+     else if(top40[i].dept=='7XXX')
+    {
+        stud = 7
+    }
+    else if(top40[i].dept=='8XXX')
+    {
+        stud = 8
+    }
+        
+    arr[i]=[stud, top40[i].grade]
+}
+
+
+viz.linechart(arr)
+``` 
+
+###What is the average grade given by each department? Barchart
+
+```
+var depts = _(data)
+            .groupBy('CrsPBADept')
+            .map(function(members, key){                
+                return {
+                    dept: key,
+                    courses: members,
+                }
+            })
+            .each(function(d){
+                d.grade = _(d.courses)
+                              .pluck('AVG_GRD')
+                              .map(Number)
+                              .mean()
+                              .value()                             
+            })
+            .value()        
+
+var top40 = _.sortBy(depts, 'grade')
+            .reverse()
+            .slice(0,40)
+```
+
+The top 40 in terms of department and average grade:
+
+```jade
+table
+    tr
+        th Department
+        th Average Grade       
+    each d,i in top40
+        tr
+            td= d.dept
+            td= d.grade
+```
+
+```jade
+table
+    tr
+        th Enrolled
+    tr
+        td!= viz.barchart(_.pluck(top40, 'grade'),40)
+``` 
+
+###What is the relationship or correlation between average course rating and grades? scatter plot
+
+
+
+```
+var avg_grades = _.pluck(data, 'AVG_GRD')
+var avg_courses = _.pluck(data, 'AvgCourse')
+
+var arr = [];
+for (i=0;i<avg_grades.length;i++)
+{
+    arr[i]=[avg_grades[i], avg_courses[i]]
+}
+
+
+viz.scatterplot(arr.slice(0,500),40)
+
+``` 
+
+
+###What is the distribution of different instructor types?
+```
+var instructs = _(data)
+            .groupBy('insttl1')
+            .map(function(members, key){                
+                return {
+                    instruct: key,
+                    courses: members,
+                }
+            })
+            .each(function(d){
+                d.count = d.courses.length
+            })
+            .value()        
+
+var top10 = _.sortBy(instructs, 'count')
+            .reverse()
+            .slice(0,40)
+```
+
+The top 40 in terms of the instructor type and distribution:
+
+```jade
+table
+    tr
+        th Instructor Type
+        th Occurrence      
+    each d,i in top10
+        tr
+            td= d.instruct
+            td= d.count
+```
+
+```jade
+table
+    tr
+        th Occurrence
+    tr
+        td!= viz.barchart(_.pluck(top10, 'count'),40)
+```  
+
+###Create a linechart to show the average course rating of all courses over 2009 - 2014  
+
+```
+var years = _(data)
+            .groupBy('YearTerm')
+            .map(function(members, key){                
+                return {
+                    year: key,
+                    courses: members,
+                }
+            })
+           .each(function(d){
+                d.avgcourse = _(d.courses)
+                              .pluck('AvgCourse')
+                              .map(Number)
+                              .mean()
+                              .value()                             
+            })
+            .value()        
+
+var top6= _.sortBy(years, 'avgcourse')
+            .reverse()
+            .slice(0,6)
+```
+
+The year and associated average grade
+
+```jade
+table
+    tr
+        th Course Year
+        th Average Course Grade      
+    each d,i in top6
+        tr
+            td= d.year
+            td= d.avgcourse
+```
+
+###Create a barchart to show the total number of students taught by instructors 
+
+```
+var instructs = _(data)
+            .groupBy('insname1')
+            .map(function(members, key){                
+                return {
+                    instruct: key,
+                    courses: members,
+                }
+            })
+           .each(function(d){
+                d.enrolled = _(d.courses)
+                              .pluck('N_ENROLL')
+                              .map(Number)
+                              .sum()
+                              .value()                             
+            })
+            .value()        
+
+var top30 = _.sortBy(instructs, 'enrolled')
+            .reverse()
+            .slice(0,30)
+```
+
+The top 30 in terms of the instructor type and distribution:
+
+```jade
+table
+    tr
+        th Instructor
+        th Students Taught     
+    each d,i in top30
+        tr
+            td= d.instruct
+            td= d.enrolled
+``` 
+```jade
+table
+    tr
+        th # of Students
+    tr
+        td!= viz.barchart(_.pluck(top30, 'enrolled'), 40)
+``` 
+
+
+
+###Create a scatterplot to show the relationship between avg course rating and number of student enrolled
+```  
+var students = _.pluck(data, 'N_ENROLL')
+var avg_courses = _.pluck(data, 'AvgCourse')
+
+
+var arr = [];
+for (i=0;i<students.length;i++)
+{
+    arr[i]=[students[i], avg_courses[i]]
+}
+
+
+viz.scatterplot(arr.slice(0,500),5)
 ```

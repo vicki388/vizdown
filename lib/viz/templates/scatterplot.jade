@@ -1,0 +1,9 @@
+table(border=2)
+	tr
+		td
+			svg(width=w, height=h)
+				each p in data
+					circle(cx= p.x+5, cy=h-(p.y+5), r=2, stroke="blue") p.x p.y
+
+p
+	Plot title
