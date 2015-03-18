@@ -1,0 +1,99 @@
+```
+load('examples/ebird/ebird1k.txt')
+//show()
+```
+# What is the distribution of most common bird species sighted to least common?
+```
+reset()
+top('COMMON NAME')
+groupBy('LOCALITY')
+show()
+```
+
+
+# What are the birds' ages and sex?
+
+```
+reset()
+top('AGE/SEX')
+groupBy('LOCALITY')
+show()
+```
+
+# What is the distribution of birds by state?
+
+```
+reset()
+top('STATE')
+groupBy('LOCALITY')
+show()
+```
+
+# What is the average time of spotting?
+```
+reset()
+top('TIME OBSERVATIONS STARTED')
+groupBy('LOCALITY')
+show()
+```
+
+
+
+#What are the comments
+
+```
+reset()
+top('TRIP COMMENTS')
+groupBy('LOCALITY')
+show()
+```
+#What is the duration for most sightings
+
+```
+reset()
+top('DURATION MINUTES')
+groupBy('LOCALITY')
+show()
+```
+# The Black Vulture
+The Black Vulture is the most commonly spotted bird. Let's find out more about it.
+
+#Where are the Black Vulture spottings by state and who is spotting them?
+```
+reset()
+filterBy('COMMON NAME', 'Black Vulture')
+select(['COMMON NAME','STATE', 'LAST NAME'])
+groupBy('LOCALITY')
+show()
+```
+#Who spotted the Black Vulture in Florida? What other observations have they made?
+```
+reset()
+filterBy('LAST NAME', 'Simard')
+select(['COMMON NAME','STATE'])
+groupBy('LOCALITY')
+show()
+```
+#Have they made any comments?
+
+
+```
+reset()
+filterBy('LAST NAME', 'Simard')
+select('TRIP COMMENTS')
+groupBy('LOCALITY')
+show()
+```
+
+#Who made the comment:
+WINGS tour
+
+
+```
+reset()
+//filterBy('LAST NAME', 'Simard')
+filterBy('TRIP COMMENTS', 'WINGS tour')
+select(['LAST NAME', 'STATE', 'COUNTY','COMMON NAME'])
+groupBy('LOCALITY')
+show()
+```
